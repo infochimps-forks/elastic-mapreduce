@@ -16,10 +16,8 @@ class HttpDestinationHandler < Handler
     @log = LogFactory.getLog('Amazon::Coral::HttpDestinationHandler')
 
     @uri = case endpoint
-      when URI:
-        endpoint
-      else
-        URI.parse(endpoint)
+      when URI then  endpoint
+      else           URI.parse(endpoint)
     end
     @uri.path = '/' if @uri.path.nil? || @uri.path.empty?
   end
