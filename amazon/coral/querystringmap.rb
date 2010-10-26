@@ -43,35 +43,27 @@ class QueryStringMap < Hash
 
   def add_flattened_helper(stack, obj)
     return if obj.nil?
-    
-    case obj
-      when Hash:
 
+    case obj
+      when Hash
         obj.each_pair { |k,v|
           stack.push(k)
           add_flattened_helper(stack, v)
           stack.pop
         }
-
-      when Array:
-
+      when Array
         # Do artificial list member wrapping (Coral requires this level of indirection, but doesn't validate the member name)
         stack.push("member")
-
         obj.each_index { |i|
           v = obj[i]
           stack.push(i + 1) # query string arrays are 1-based
           add_flattened_helper(stack, v)
           stack.pop
         }
-
         stack.pop
-
       else
-
         # this works for symbols also, because sym.id2name == sym.to_s
         self[get_key(stack)] = obj.to_s
-
     end
   end
 
